@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static',     filename='style.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Movie App</title>
+</head>
+<body>
+    <header>
+        <form  id="form" action="/" method="POST">
+            <input type="text" placeholder="Tìm kiếm..." name="search" class="search" id="search"  value="{{ search}}" required>
+            <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+        <a href="/insertMovie"><i class="fa fa-plus-circle" style="
+    margin-right: -115px;
+    margin-left: 80px;
+    font-size: 40px;
+    color: black;
+"></i></a>
+    </header>
+    <div>
+        <h3 style="margin-left: 138px; margin-bottom: 0; margin-top: 25px;">{{title}}</h3>
+        {% if status == 1 %}
+        <main >
+        {% for movie in popular_movies %}
+        <div class="movie" >
+            <a href="{{movie['link']}}" target="_blank">
+                <img src="{{movie['url_img']}}">
+                <div class = "movie-info">
+                    <div style="width: 70%">
+                        <div class = "cutting-text" style="font-weight: bold; font-size: 16px; color: yellow; text-transform: uppercase">{{movie['Movie_vn']}}</div>
+                        <div class = "cutting-text" style="font-size: 14px">{{movie['Movie_en']}}</div>
+                    </div>
+                    <div><span class="green">{{movie['rating']}}</span></div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+        </main>
+        {% endif %}
+
+        {% if status == 2 %}
+        <main>
+            {% if label == -1%}
+            {% for movie in movie_list %}
+            <div class="movie" >
+                <a href="{{movie['link']}}" target="_blank" >
+                <img src="{{movie['url_img']}}">
+                <div class = "movie-info">
+                    <div style="width: 70%">
+                        <div class = "cutting-text" style="font-weight: bold; font-size: 16px; color: yellow; text-transform: uppercase">{{movie['Movie_vn']}}</div>
+                        <div class = "cutting-text" style="font-size: 14px">{{movie['Movie_en']}}</div>
+                    </div>
+                    <div><span class="green">{{movie['rating']}}</span></div>
+                </div>
+                </a>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            {% if label != -1%}
+            <input  value={{label}} id="label" hidden>
+            {% for movie in movie_list %}
+            <div class="movie" >
+                <a onclick='myfunction()' href="{{movie['link']}}" target="_blank" id="a" >
+                <img src="{{movie['url_img']}}">
+                <div class = "movie-info">
+                    <div style="width: 70%">
+                        <div class = "cutting-text" style="font-weight: bold; font-size: 16px; color: yellow; text-transform: uppercase">{{movie['Movie_vn']}}</div>
+                        <div class = "cutting-text" style="font-size: 14px">{{movie['Movie_en']}}</div>
+                    </div>
+                    <div><span class="green">{{movie['rating']}}</span></div>
+                </div>
+                </a>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </main>
+        {% endif %}
+
+        {% if status == -1 %}
+        <b style="margin: 515px;">Không tìm thấy nhạc phù hợp</b>
+        {% endif %}
+    </div>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    <script src="./static/main.js"></script>
+
+
+
+</body>
+</html>

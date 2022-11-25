@@ -1,0 +1,59 @@
+ <!DOCTYPE html>
+<!-- Created By CodingLab - www.codinglabweb.com -->
+ <html lang="en" dir="ltr" xmlns="http://www.w3.org/1999/html">
+  <head>
+    <meta charset="UTF-8">
+    <!---<title> Responsive Registration Form | CodingLab </title>--->
+    <link href="{{ url_for('static',     filename='main.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+   </head>
+<body>
+  <div class="container">
+    <div class="title">Thêm Phim</div>
+    <div class="content">
+      <form action="/insertMovie" method="POST" id = "insertmovie">
+        <div class="user-details">
+          <div class="input-box">
+            <span class="details">Tên phim tiếng Việt</span>
+            <input type="text" name="movie_vn" required id="movie_vn">
+          </div>
+          <div class="input-box">
+            <span class="details">Tên phim tiếng Anh</span>
+            <input type="text" name="movie_en"required id="movie_en">
+          </div>
+          <div class="input-box">
+            <span class="details">Link phim</span>
+            <input type="text" name="link"required id="link">
+          </div>
+          <div class="input-box">
+            <span class="details">Rating</span>
+            <input type="number" name="rating" value="0" required min = 0 max = 10 step="0.1" id="number">
+          </div>
+          <div class="input-box">
+            <span class="details">Nhãn phim</span>
+            <select name="label"  required id="label">
+              <option value="">Chọn nhãn</option>
+              <option value="0">Bình thường</option>
+              <option value="1">Tích cực</option>
+              <option value="2">Tiêu cực</option>
+            </select>
+          </div>
+          <div class="input-box">
+            <span class="details">Poster phim</span>
+            <input type="text" name="url_img" required id="url_img">
+          </div>
+        </div>
+        <div class="button">
+          <button type="submit" id="insert_movie_success()">Xong</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+</body>
+
+
+</html>
