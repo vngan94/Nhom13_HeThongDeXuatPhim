@@ -4,8 +4,10 @@ import Model
 
 from Learning import predict
 from Model import connect
-from Normalization import chuanhoachuTV, stopword, test
+from Normalization import chuanhoachuTV as c, stopword as s, test
+from underthesea import text_normalize
 import os, datetime
+
 
 app = Flask(__name__)
 model_folder = "C:/Users/LENOVO/PycharmProjects/abc/Learning/Model/Full_Model/"
@@ -21,27 +23,33 @@ def home():
         return render_template("index.html", popular_movies=popular_movies, status = 1,title="PHIM MỚI")
     if request.method == 'POST':
         res = connect.select_name_movie(request.form['search'])
+        print(type(res))
         label = -1;
-        print("len: ", res)
         if len(res) < 1:  # trong csdl không có > dùng hệ thống thông minh
-            correct_sentence = chuanhoachuTV.chuan_hoa_dau_cau_tieng_viet(request.form['search'])
-            print('chuẩn hóa dấu câu: ', correct_sentence)
-            correct_sentence = stopword.deStopword(correct_sentence)
-            print('bỏ stopword: ', correct_sentence)
-            label = predict.predict(correct_sentence, current_h5, current_dict)
-            print("label: ", label)
-            if label == 0:  # đây là màu đỏ
-                print("binh thuong")
-            else:
-                if label == 1:  # hài hước thật sự
-                    print("tich cuc")
-                else:  # hôm nay tôi buồn
-                    print("tieu cuc")
-            if label == -1 or label == -2:
-                res = False
+            print("Input: ", request.form['search'])
+            correct_sentence = c.remove_special_character(request.form['search'])
+            correct_sentence = c.remove_consec_duplicates(correct_sentence)
+            correct_sentence = text_normalize(correct_sentence)
+            correct_sentence = s.deStopword(correct_sentence)
+
+            if(len(correct_sentence) < 1):
                 status = -1
             else:
-                res = connect.select_movie(label)[:8]
+                print("Input sau khi được xử lý: ", correct_sentence)
+                label = predict.predict(correct_sentence, current_h5, current_dict)
+                print("label: ", label)
+                if label == 0:  # đây là màu đỏ
+                    print("binh thuong")
+                else:
+                    if label == 1:  # hài hước thật sự
+                        print("tich cuc")
+                    else:  # hôm nay tôi buồn
+                        print("tieu cuc")
+                if label == -1 or label == -2:
+                    res = False
+                    status = -1
+                else:
+                    res = connect.select_movie(label)[:8]
         print("status", status)
         print("label", label)
         return render_template("index.html",  search=request.form['search'], title="KẾT QUẢ TÌM KIẾM", label = label, movie_list=res, status=2)
@@ -68,6 +76,10 @@ def saveInputAndLabel():
         result = json.loads(output)  # this converts the json output to a python dictionary
         label = result["label"]
         textt= result["text"]
+        textt = c.remove_special_character(textt)
+        textt = c.remove_consec_duplicates(textt)
+        textt = text_normalize(textt)
+        textt = s.deStopword(textt)
         if label == "0":  # đây là màu đỏ
             with open('C:/Users/LENOVO/PycharmProjects/abc/Learning/Data/Full_Data/binhthuong.txt',
             encoding="utf-8") as f:

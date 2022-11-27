@@ -1,8 +1,9 @@
 import re
+import underthesea as u
 def deStopword(content1):
     stopwords = []
     stopwords1 = []
-    content = open('Normalization/stopwords1.txt', 'r', encoding='UTF-8').read()
+    content = open('C:/Users/LENOVO/PycharmProjects/abc/Normalization/stopword.txt', 'r', encoding='UTF-8').read()
     res = content.split("\n")
     res1 = content1.split()
     res2 = []
@@ -34,9 +35,12 @@ def deStopword(content1):
     return content1
 
 if __name__ == '__main__':
+    s = 'rất quả'
 
-    print(deStopword('chạp nỗi lòng. 😘🥰 rất buồn quá'))
+    print(len(deStopword('rất quá')))
 
 
 
-# print(len(stopwords))
+
+
+

@@ -48,4 +48,7 @@ def select_polular_movie():
     """)
     res = [dict((cursor.description[i][0], value)
                for i, value in enumerate(row)) for row in cursor.fetchall()]
+    print(type(res))
     return res
+if __name__ == '__main__':
+    select_polular_movie()
