@@ -22,9 +22,7 @@ sep = os.sep
 data_folder = "C:/Users/LENOVO/PycharmProjects/abc/Learning/Data/Full_Data"
 model_folder = "C:/Users/LENOVO/PycharmProjects/abc/Learning/Model/Full_Model"
 result_folder = "C:/Users/LENOVO/PycharmProjects/abc/Learning/Result"
-
 EMBEDDING_DIM = 300
-
 
 def txtTokenizer(texts):
     tokenizer = Tokenizer(lower=True, filters=',.')
@@ -32,11 +30,6 @@ def txtTokenizer(texts):
 
     word_index = tokenizer.word_index
     return tokenizer, word_index
-
-
-
-
-
 
 def loadData(data_folder):
     texts = []
@@ -58,10 +51,6 @@ def loadData(data_folder):
                 texts = texts + [l]
                 label = f[:len(f) - 4]  # binhthuong.txt > binhthuong
                 labels = labels + [label]
-
-
-
-
 
     return texts, labels
 
@@ -95,17 +84,9 @@ if __name__ == '__main__':
     print(X)
     print(X.shape)
 
-
-
-
-
-
     y = pd.get_dummies(labels)
 
-
-
-
-    # split to train data and test data
+    # split to train data and validation data
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, shuffle=True)
     #
     # # create or load word2vec model
@@ -131,12 +112,13 @@ if __name__ == '__main__':
     # # train CNN model and save a model with the best val_acc
     sequence_length = X.shape[1]
     filter_sizes = [3, 4, 5]
+
     drop = 0.2
     num_filters = 298
     inputs = Input(shape=(sequence_length,))
     embedding = Embedding(len(word_index) + 1, EMBEDDING_DIM, weights=[embedding_matrix], trainable=True)(inputs)
     reshape = Reshape((sequence_length, EMBEDDING_DIM, 1))(embedding)
-
+    print(reshape)
     conv_0 = Conv2D(num_filters, (filter_sizes[0], EMBEDDING_DIM), activation='relu')(reshape)
     conv_1 = Conv2D(num_filters, (filter_sizes[1], EMBEDDING_DIM), activation='relu')(reshape)
     conv_2 = Conv2D(num_filters, (filter_sizes[2], EMBEDDING_DIM), activation='relu')(reshape)
@@ -158,13 +140,12 @@ if __name__ == '__main__':
     model = Model(inputs, output)
 
     model.summary()
+    batch = 256
+    epochs = 20
     model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=['accuracy'])
     filepath = model_folder + sep + "predict_model.h5"
     checkpoint = ModelCheckpoint(filepath, save_best_only=True, verbose=1, monitor='val_accuracy', mode='auto')
     callbacks_list = [checkpoint]
-
-    batch = 256
-    epochs = 20
     history_data = model.fit(X_train, y_train, batch_size=batch, epochs=epochs, callbacks=callbacks_list, verbose=2,
                              validation_data=(X_test, y_test))
 
